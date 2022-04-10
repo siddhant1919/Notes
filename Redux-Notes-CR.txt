@@ -1,0 +1,609 @@
+Redux is a predictable state container for javascript apps.
+
+  1) Redux is not tied to react.
+  2) can be used with react, angular, veu or even vanilla javascript.
+  3) Redux is library for JS application.
+  4) Redux stores the state of your application.
+  5) Consider a react app - state of a component.
+  6) State of an app is the represent by all the individual components of that app.
+  7) Redux will store and manage the application state.
+
+
+Store
+  Holds the state of your application.
+  One store for entire application.
+
+    Responsibilities:-
+       
+      1) Holds application state.
+      2) Allows access to state via getState().
+      3) Allows state to be updated via dispatch(action).
+      4) Registers listners via subscribe(listner)
+      5) Handles unregistering of listners via function returned by subscribe(listner)
+
+
+Actions
+  Describes the changes in the state of the application
+
+    1) The only way your application can interact with the store.
+    2) Carry some information from your app to the redux.
+    3) Plain Javascript object.
+    4) Have a 'type' property that indicates the type of action being performed.
+    5) The 'type' property is typically defined as string constants. 
+
+
+Reducer
+  It actually carrries out the state transition depending on the actions.
+
+    1) Function that app's state changes in response to action sent to the store.
+    2) Function that accepts state and action as argument, and returns the next state of the application.
+
+        (previousState, action) => newState 
+
+
+Redux Principles
+  
+  1) The state of your whole application is stored in an object tree within single store.
+      Maintain our application state in a single which would be managed by the redux store.
+  
+  2) The only way to change the state is to emit an action, an object describing what happend.
+      To update the state of your app, you need to let redux know about that with an action not allowed to directly update the state object.
+
+  3) To specify  hoe=w the state tree is transformed by action, you write pure Reducer
+      Reducer - (previousState, action) => newState
+
+
+  Example 1
+  
+    (index.js)
+      const redux = require('redux')
+      const createStore = redux.createStore
+      const combineReducers = redux.combineReducers
+
+      const BUY_CAKE = "BUY_CAKE";
+      const BUY_ICECREAM = "BUY_ICECREAM";
+
+      function buyCake() {
+        return {
+          type: BUY_CAKE,
+          info: "First redux action"
+        }
+      }
+
+      function buyIceCream() {
+        return {
+          type: BUY_ICECREAM,
+          info: "Second redux action"
+        }
+      }
+
+
+      const initialCakeState = {
+        numOfCake: 10
+      }
+
+
+      const initialIceCreamState = {
+        numOfIceCream: 20
+      }
+
+
+      const cakeReducer = (state = initialCakeState, action) => {
+        switch (action.type) {
+          case BUY_CAKE:
+            return {
+              ...state,
+              numOfCake: state.numOfCake - 1
+            }
+          default:
+            return state;
+        }
+      }
+
+      const iceCreamReducer = (state = initialIceCreamState, action) => {
+        switch (action.type) {
+        case BUY_ICECREAM:
+            return {
+              ...state,
+              numOfIceCream: state.numOfIceCream - 1
+            }
+          default:
+            return state;
+        }
+      }
+
+      const rootReducer = combineReducers({
+        cake: cakeReducer,
+        iceCream: iceCreamReducer
+      })
+      const store = createStore(rootReducer)
+      console.log('initial state', store.getState())
+      const unsubscribe = store.subscribe(() => console.log('update state', store.getState()))
+      store.dispatch(buyCake())
+      store.dispatch(buyCake())
+      store.dispatch(buyCake())
+      store.dispatch(buyIceCream())
+      store.dispatch(buyIceCream())
+      unsubscribe()
+
+
+Middleware
+
+  1) Is the suggested way to extend redux with custom functionality.
+  2) Provides a third-party extension point betweeen dispacthing an action, and th moment it reaches th e reducer.
+  3) Use middleware for logging, crash reporting, performing asynchronous tasks etc.
+
+
+  Example 2
+
+    (index.js)
+      const redux = require('redux')
+      const createStore = redux.createStore
+      const combineReducers = redux.combineReducers
+      const applyMiddleware = redux.applyMiddleware
+
+      const reduxLogger = require('redux-logger')
+      const logger = reduxLogger.createLogger()
+
+      const BUY_CAKE = "BUY_CAKE";
+      const BUY_ICECREAM = "BUY_ICECREAM";
+
+      function buyCake() {
+        return {
+          type: BUY_CAKE,
+          info: "First redux action"
+        }
+      }
+
+      function buyIceCream() {
+        return {
+          type: BUY_ICECREAM,
+          info: "Second redux action"
+        }
+      }
+
+
+      const initialCakeState = {
+        numOfCake: 10
+      }
+
+
+      const initialIceCreamState = {
+        numOfIceCream: 20
+      }
+
+
+      const cakeReducer = (state = initialCakeState, action) => {
+        switch (action.type) {
+          case BUY_CAKE:
+            return {
+              ...state,
+              numOfCake: state.numOfCake - 1
+            }
+          default:
+            return state;
+        }
+      }
+
+      const iceCreamReducer = (state = initialIceCreamState, action) => {
+        switch (action.type) {
+        case BUY_ICECREAM:
+            return {
+              ...state,
+              numOfIceCream: state.numOfIceCream - 1
+            }
+          default:
+            return state;
+        }
+      }
+
+      const rootReducer = combineReducers({
+        cake: cakeReducer,
+        iceCream: iceCreamReducer
+      })
+
+      const store = createStore(rootReducer, applyMiddleware(logger))
+      console.log('initial state', store.getState())
+      const unsubscribe = store.subscribe(() => {})
+      store.dispatch(buyCake())
+      store.dispatch(buyCake())
+      store.dispatch(buyCake())
+      store.dispatch(buyIceCream())
+      store.dispatch(buyIceCream())
+      unsubscribe()
+
+
+Synchronous Actions
+
+  1) As soon as an action was dispatched, the state was immediately updated.
+  2) If you dispatched the BUY_CAKE action, the numOfCake was right away decremented by 1.
+  3) Same with BUY_ICECREAM action as well.
+
+
+Async Actions
+
+  asynchronous API calls to fetch data from an end point and use that data in your application.
+
+
+Async action creators
+
+  axios: Request to an API end point.
+  redux-thunk - Define async action creators Middleware 
+
+
+  Example 3
+
+    (asyncActions.js)
+    const redux = require('redux')
+    const createStore = redux.createStore
+    const applyMiddleware = redux.applyMiddleware
+    const thunkMiddleware = require('redux-thunk').default
+    const axios = require('axios')
+
+    const initialState = {
+      loading: false,
+      users: [],
+      error: ''
+    }
+
+    const FETCH_USERS_REQUEST = 'FETCH_USERS_REQUEST'
+    const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS'
+    const FETCH_USERS_FAILURE = 'FETCH_USERS_FAILURE'
+
+    const fetchUsersRequest = () => {
+      return {
+        type: FETCH_USERS_REQUEST
+      }
+    }
+
+    const fetchUsersSuccess = (users) => {
+      return {
+        type: FETCH_USERS_SUCCESS,
+        payload: users
+      }
+    }
+
+    const fetchUsersFailure = (error) => {
+      return {
+        type: FETCH_USERS_FAILURE,
+        payload: error
+      }
+    }
+
+    const reducer = (state = initialState, action) => {
+      switch (action.type) {
+        case FETCH_USERS_REQUEST:
+          return {
+            ...state,
+            loading: true
+          }
+
+        case FETCH_USERS_SUCCESS:
+          return {
+            loading: true,
+            users: action.payload,
+            error: ''
+          }
+
+        case FETCH_USERS_FAILURE:
+          return {
+            loading: false,
+            users: '',
+            error: action.payload
+          }
+
+        default:
+          return state;
+      }
+    }
+
+    const fetchUsers = () => {
+      return function(dispatch) {
+        dispatch(fetchUsersRequest())
+        axios.get('https://jsonplaceholder.typicode.com/users')
+        .then(response => {
+
+          const users = response.data.map(user => user.id)
+          dispatch(fetchUsersSuccess(users))
+        })
+        .catch(error => {
+          
+          dispatch(fetchUsersFailure(error.message))
+        })
+      }
+    }
+
+    const store = createStore(reducer,applyMiddleware(thunkMiddleware))
+    store.subscribe(() => {console.log(store.getState())})
+    store.dispatch(fetchUsers())
+
+
+Example 4
+
+  (Redux/Cake/cakeTypes.js)
+    export const BUY_CAKE = 'BUY_CAKE'
+
+
+  (Redux/Cake/cakeReducer.js)
+    import { BUY_CAKE } from './cakeTypes'
+
+    const initialState = {
+      numOfCakes: 10
+    }
+
+    const cakeReducer = (state = initialState, action) => {
+      switch (action.type) {
+        case BUY_CAKE:
+          return{
+            ...state,
+            numOfCakes: state.numOfCakes - action.payload
+          }
+
+        default:
+          return state;
+      }
+    }
+    export default cakeReducer
+
+
+  (Redux/Cake/cakeActions.js)
+    import { BUY_CAKE } from './cakeTypes'
+
+    export const buyCake = () => {
+      return {
+        type: BUY_CAKE,
+        payload: number
+      }
+    }
+
+
+  (Redux/iceCream/iceCreamAction.js)
+      import { BUY_ICECREAM } from "./iceCreamTypes";
+      export const buyIceCream = () => {
+        return{
+          type: BUY_ICECREAM
+        }
+      }
+
+    
+  (Redux/iceCream/iceCreamReducer.js)
+      import { BUY_ICECREAM } from "./iceCreamTypes"
+
+      const initialState = {
+        numOfIceCream : 20
+      }
+
+      const iceCreamReducer = (state = initialState, action) => {
+        switch (action.type) {
+          case  BUY_ICECREAM:
+            return{
+              ...state,
+              numOfIceCream: state.numOfIceCream - 1
+            }
+
+          default:
+            return state;
+        }
+      }
+      export default iceCreamReducer
+
+
+  (Redux/iceCream/iceCreamTypes.js)
+    export const BUY_ICECREAM = 'BUY_ICECREAM'
+
+
+
+  (Redux/Index.js)
+    export { buyCake } from './Cake/cakeActions'
+    export { buyIceCream } from './iceCream/iceCreamAction'
+
+  
+  (Redux/rootReducer.js)
+    import { combineReducers } from "redux";
+    import cakeReducer from "./Cake/cakeReducer";
+    import iceCreamReducer from "./iceCream/iceCreamReducer";
+
+    const rootReducer = combineReducers({
+      cake: cakeReducer,
+      iceCream: iceCreamReducer
+    })
+    export default rootReducer
+
+
+  (Redux/Store.js)
+    import { createStore, applyMiddleware } from 'redux'
+    import logger from 'redux-logger'
+    import rootReducer from './rootReducer';
+
+    const store = createStore(rootReducer,applyMiddleware(logger))
+
+    export default store;
+
+
+  (Components/cakeContainer.js)
+    import React from 'react'
+    import { connect } from 'react-redux'
+    import {buyCake} from '../Redux/Index'
+
+    function CakeContainer(props) {
+      return (
+        <div>
+          <h2>Number of cakes - {props.numOfCakes} </h2>
+          <button onClick={props.buyCake}>Buy Cake</button>
+        </div>
+      )
+    }
+
+    const mapStateToProps = state => {
+      return{
+        numOfCakes: state.cake.numOfCakes
+      }
+    }
+
+    const mapDispatchToProps = dispatch => {
+      return{
+        buyCake: () => dispatch(buyCake())
+      }
+    }
+    export default connect(mapStateToProps,mapDispatchToProps)(CakeContainer)
+
+
+
+  (Components/HooksCakeContainer.js)
+    import React from 'react'
+    import {useSelector, useDispatch} from 'react-redux'
+    import {buyCake} from '../Redux/Index'
+
+    function HooksCakeContainer() {
+      const numOfCakes = useSelector(state => state.cake.numOfCakes)
+      const dispatch = useDispatch()
+      return (
+        <div>
+          <h2>Num of cakes - {numOfCakes} </h2>
+          <button onClick={() => dispatch(buyCake())}>Buy Cakes</button>
+        </div>
+      )
+    }
+    export default HooksCakeContainer
+
+
+  (Components/IceCreamContainer.js)
+      import React from 'react'
+      import { connect } from 'react-redux'
+      import {buyIceCream} from '../Redux/Index'
+
+      function IceCreamContainer(props) {
+        return (
+          <div>
+            <h2>Number of iceCreams - {props.numOfIceCream} </h2>
+            <button onClick={props.buyIceCream}>Buy IceCream</button>
+          </div>
+        )
+      }
+
+      const mapStateToProps = state => {
+        return{
+          numOfIceCream: state.iceCream.numOfIceCream
+        }
+      }
+
+      const mapDispatchToProps = dispatch => {
+        return{
+          buyIceCream: () => dispatch(buyIceCream())
+        }
+      }
+      export default connect(mapStateToProps,mapDispatchToProps)(IceCreamContainer)
+
+
+  
+  (Components/ItemContainer.js)
+    import React from 'react'
+    import { connect } from 'react-redux'
+    import { buyIceCream, buyCake } from '../Redux/Index'
+
+    function ItemContainer(props) {
+      return (
+        <div>
+          <h2>Item - {props.item}</h2>
+          <button onClick={props.buyItem}>Buy Items</button>
+        </div>
+      )
+    }
+
+    const mapStateToProps = (state,ownProps) => {
+      const itemState = ownProps.cake ? state.cake.numOfCake : state.iceCream.numOfIceCream
+      return {
+        item : itemState
+      }
+    }
+
+    const mapDispatchToProps = (dispatch, ownProps) => {
+      const dispatchFucntion = ownProps.cake
+      ? () => dispatch(buyCake())
+      : () => dispatch(buyIceCream())
+
+      return {
+        buyItem: dispatchFucntion
+      }
+    }
+    export default connect(mapStateToProps, mapDispatchToProps)(ItemContainer)
+
+
+
+  (Components/NewCakeContainer.js)
+    import React,{useState} from 'react'
+    import { connect } from 'react-redux'
+    import {buyCake} from '../Redux/Index'
+
+    function NewCakeContainer(props) {
+      const [number, setNumber] = useState(1)
+      return (
+        <div>
+          <h2>Number of cakes - {props.numOfCakes} </h2>
+          <input type="text" value={number} onChange={e => setNumber(e.target.value)}/> 
+          <button onClick={() => props.buyCake(number)}>Buy {number} cakes</button>
+        </div>
+      )
+    }
+
+    const mapStateToProps = state => {
+      return{
+        numOfCakes: state.cake.numOfCakes
+      }
+    }
+
+    const mapDispatchToProps = dispatch => {
+      return{
+        buyCake: number => dispatch(buyCake(number))
+      }
+    }
+    export default connect(mapStateToProps,mapDispatchToProps)(NewCakeContainer)
+
+
+
+
+
+  (App.js)
+    import { Provider } from 'react-redux';
+    import store from './Redux/Store'
+    import './App.css';
+    import CakeContainer from './Components/CakeContainer';
+    import HooksCakeContainer from './Components/HooksCakeContainer';
+    import IceCreamContainer from './Components/IceCreamContainer';
+    import NewCakeContainer from './Components/NewCakeContainer';
+    import ItemContainer from './Components/ItemContainer';
+
+    function App() {
+      return (
+        <Provider store={store}>
+          <div className="App">
+            <HooksCakeContainer />
+            <CakeContainer />
+            <IceCreamContainer />
+            <NewCakeContainer />
+          </div>
+        </Provider>
+      );
+    }
+    export default App;
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+

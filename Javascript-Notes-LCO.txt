@@ -1,0 +1,734 @@
+//falsy values
+
+undefined 
+
+null --> it means empty not 0
+
+NaN(not a number)
+
+0
+
+''
+-----------------------------------------------------------------------------------------------------------
+ways to declare array -->
+
+  var states = ["maharashtra","delhi","mp","up"];
+
+  var states = new Array("maharashtra","delhi","mp","up");
+
+
+access every elements of array without using loops -->
+
+  [2,4,6,8].every(/*PERFORM ANY OPERATION ON EVERY ELEMENT IN ARRAY*/);
+
+  example:-
+
+   var result = [2,4,6,8].every((e) => {
+     return e % 2 === 0;
+   });
+
+   console.log(result);
+
+   output:-
+            true
+
+most common methods used in arrays -->
+
+  fill();
+  filter(/*CALL BACK FUNCTION*/);
+  slice();
+  splice();  
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------
+Anonymous function --> (it runs without calling and dont have name)
+
+  (function (){
+    console.log("hii");
+  })();
+
+  output:-
+   
+      hii
+
+-----------------------------------------------------------------------------------------------------------
+ Curring - How to pass value in nested function -->
+
+  function addNumber(x)
+  {
+    return function add(y)
+    {
+      return x+y;
+    }
+  }
+
+  console.log(addNumber(5)(5));
+
+  output:-
+
+    10
+
+-----------------------------------------------------------------------------------------------------------
+Objects -->
+
+    var user = {
+      firstName : "sid",
+      lastName : "gangurde",
+      role : "admin",
+      logincount : 23,
+      login : true
+    }
+
+  console.log(user.lastName);
+
+  output :-
+        gangurde
+
+
+using methods in objects -->
+
+  /*
+   this keyword is used to access the variable in same scope
+  */
+
+  var user = {
+  firstName : "sid",
+  lastName : "gangurde",
+  courseList : [],
+  buyCourse : function (courseName) {
+    this.courseList.push(courseName);
+  },
+  getCourseCount : function () {
+    return `${this.firstName} is enrolled in total of ${this.courseList.length} courses`;
+  }
+  }
+
+    console.log(user.firstName);
+    console.log(user.getCourseCount());
+    user.buyCourse("React JS course");
+    user.buyCourse("angular course");
+    console.log(user.getCourseCount());
+
+    output :-
+        sid
+        sid is enrolled in total of 0 courses
+        sid is enrolled in total of 2 courses
+
+-----------------------------------------------------------------------------------------------------------
+Copying or Borrowing the method of one object to another objects(which has same keys) usins bind()
+
+  const hitesh = {
+    firstName : "hitesh",
+    lastName : "choudhary",
+    role : "admin",
+    courseCount : 3,
+    getInfo : function(){
+      console.log(`
+        first name is ${this.firstName}
+        last name is ${this.lastName}
+        his role is is ${this.role}
+        and he is studying ${this.courseCount} courses 
+      `);
+    }
+  };
+
+
+  const dj = {
+  firstName : "rock",
+  lastName : "dj",
+  role : "sub-admin",
+  courseCount : 4
+  }
+
+  var djinfo = hitesh.getInfo.bind(dj);
+
+  djinfo();
+
+  output:-
+
+      first name is rock
+      last name is dj
+      his role is is sub-admin
+      and he is studying 4 courses
+
+  /*
+
+  to copy the method and directly call it we use call()
+
+  hitesh.getInfo.call(dj);
+
+  output will bw same:-
+
+      first name is rock
+      last name is dj
+      his role is is sub-admin
+      and he is studying 4 courses
+
+
+  */
+
+-----------------------------------------------------------------------------------------------------------
+Prototype -->
+
+  var User = function(firstName, courseCount){
+    this.firstName = firstName;
+    this.courseCount = courseCount;
+    this.getCourseCount = function(){
+      console.log(`course count is ${this.courseCount}`);
+    };
+  };
+
+  var hitesh = new User("hitesh",2);
+
+  console.log(hitesh);
+
+  var sid = new User("sid",1);
+
+  console.log(sid);
+
+
+  output:-
+
+        User {
+          firstName: 'hitesh',
+          courseCount: 2,
+          getCourseCount: [Function (anonymous)]
+          }
+        User {
+          firstName: 'sid',
+          courseCount: 1,
+          getCourseCount: [Function (anonymous)]
+          }
+
+
+defining function of prototype outside of prototype
+
+  User.prototype.getFirstName = function(){
+  console.log(`your first name is : ${this.firstName}`);
+  };
+
+  hitesh.getCourseCount();
+  hitesh.getFirstName();
+  /*
+    if we want to check if that the method is present in the prototype and then call it to avoid the error or undifined(we dont need to do this if we know that method already exists) we do like this
+
+    if(hitesh.hasOwnProperty("firstName"))
+    {
+      hitesh.getFirstName();
+    }
+
+  */
+
+  sid.getCourseCount();
+  sid.getFirstName();
+
+  output:-
+      course count is 2
+      your first name is : hitesh
+      course count is 1
+      your first name is : sid
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------
+forEach -->
+
+  const mystates = [
+  "raj",
+  "mah",
+  "mum",
+  1997,
+  "up",
+  "mp"
+  ];
+
+  mystates.forEach((e) => {
+    console.log(e);
+
+  })
+
+  output:-
+    raj
+    mah
+    mum
+    1997
+    up
+    mp
+
+
+-----------------------------------------------------------------------------------------------------------
+for of loop (mainly used for arrays)-->
+
+  const web = [
+  "youtube",
+  "instagram",
+  "netflix",
+  "twitter",
+  "whatsapp"
+  ];
+
+  for(const n of web)
+  {
+    console.log(n);
+  }
+
+  output:-
+      youtube
+      instagram
+      netflix
+      twitter
+      whatsapp
+
+-----------------------------------------------------------------------------------------------------------
+for in loop(mainly used for objects) -->
+
+  const symbols = {
+    yt : "youtube",
+    ig : "instagram",
+    fb : "facebook",
+    lco : "learnCodeOnline.in"
+  }
+
+  for(const n in symbols)
+  {
+    console.log(`key is - ${n} and value is : ${symbols[n]}`);
+  }
+
+  output:-
+        key is - yt and value is : youtube
+        key is - ig and value is : instagram
+        key is - fb and value is : facebook
+        key is - lco and value is : learnCodeOnline.in
+
+
+-----------------------------------------------------------------------------------------------------------
+Hoisting -->
+
+  A variable and arrow function cannot be called before declaration
+  but a normal function can be called before declaration.
+
+-----------------------------------------------------------------------------------------------------------
+
+for calling a funtion use () -->
+  
+  functionName();
+
+for refering a funtion do not use () -->
+
+  functionName;
+
+-----------------------------------------------------------------------------------------------------------
+
+`${variableName}` ---> is used as
+
+    var name = "sid";
+    var date = "19/09/2001";
+    var gender = "male";
+    var isStudent = true;
+
+
+    console.log(`
+      name is : ${name}
+      birth date is : ${date}
+      gender is: ${gender}
+      are you a student: ${isStudent}
+    `)
+
+    // Output
+      name is : sid
+      birth date is : 19/09/2001
+      gender is: male
+      are you a student: true
+    //
+
+-------------------------------------------------------------------------------------------------------------
+Math.round(variableName) is used to round up the value of variable.
+
+console.log(typeof variableName) is used to get the data type of variable.
+
+References for js keywords : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
+------------------------------------------------------------------------------------------------------------
+
+variations of if else statement
+
+    normal -->
+
+    var auhtenticated = true;
+
+    // if(auhtenticated)
+    // {
+    //   console.log("show sign out button");
+    // }
+
+    // else
+    // {
+    //   console.log("show login option");
+    // }
+
+
+
+    Conditional (ternary) operator -->(oneliner if else)
+    ifCondition ? code to execute if if statement is true : code to execute if if statement is false;
+  
+    auhtenticated ? console.log("sign out button") : console.log("log in button");
+
+
+    switch case -->
+
+    var user = "admin";
+
+    switch (user) {
+      case "admin":
+        console.log("you get full access");
+        break;
+
+      case "subadmin":
+        console.log("get access to create/delete courses");
+        break;
+
+      case "testpreps":
+        console.log("get access to create/delete courses");
+        break;
+
+      case "user":
+        console.log("gets access to consume contents");
+        break;
+
+      default:
+        console.log("trail user");
+        break;
+    }
+
+    //output
+    you get full access //
+
+----------------------------------------------------------------------------------------------------------
+Maps
+
+  var myMap = new Map();
+
+  //Adding elements in Map
+
+  myMap.set(0,"Uno");
+  myMap.set(1,"dos");
+  myMap.set(2,"tres");
+  myMap.set(3,"cuatro");
+
+  console.log(myMap);
+
+  output:-
+      { 0 => 'Uno', 1 => 'dos', 2 => 'tres', 3 => 'cuatro' }
+
+  
+  //To access keys and values of maps we can use for of loop
+
+  for(let key of myMap.keys()){
+    console.log(`key is ${key}`);
+  }
+
+  for(let value of myMap.values()){
+    console.log(`value is ${value}`);
+  }
+
+  output:-
+      key is 0
+      key is 1    
+      key is 2    
+      key is 3    
+      value is Uno
+      value is dos
+      value is tres
+      value is cuatro
+
+
+  //To access both keys and values in single loop we have to mention key and value in array[] form
+
+  for(let [key,value] of myMap){
+   console.log(`key is ${key} and value is ${value}`);
+  }
+
+  output:-
+      key is 0 and value is Uno
+      key is 1 and value is dos
+      key is 2 and value is tres
+      key is 3 and value is cuatro
+
+
+  //we can also use forEach loop but it only gives values of map
+
+  myMap.forEach((value) => {
+   console.log(`${value} is value`);
+  })
+
+
+  output:-
+      Uno is value
+      dos is value
+      tres is value
+      cuatro is value
+
+  
+  // To access both through forEach loop loop we should give it both parameters value and key(first parameter should always be the value)
+
+  myMap.forEach((value,key) => {
+    console.log(`${value} is value and key is ${key}`);
+  })
+
+
+  output:-
+      Uno is value and key is 0
+      dos is value and key is 1
+      tres is value and key is 2
+      cuatro is value and key is 3
+
+
+  //To delete we have to mention the key
+
+  myMap.delete(2);
+  console.log(myMap);
+
+  output:-
+      { 0 => 'Uno', 1 => 'dos', 3 => 'cuatro' }
+
+-------------------------------------------------------------------------------------------------------------
+Destructuring
+
+  const User = {
+    name: "siddhant",
+    courseCount : 3,
+    role : "admin"
+  };
+
+  console.log(User.courseCount);
+
+  output:-
+    3
+  
+  //Instead of doing this(console.log(User.courseCount);) we can use Destructuring and it also be used with arrays
+
+  const {name, courseCount, role} = User;
+  console.log(courseCount);
+
+
+  output:-
+    3
+
+
+-----------------------------------------------------------------------------------------------------------
+Spread and Rest Operator -->
+
+  Spread
+
+    //If we want to pass the values of array(or any data type which contain bunch of values) as a parameter to the function we can use spread operator.
+
+    function sum(a,b)
+    {
+      return a + b;
+    }
+    var myA = [5,4];
+    console.log(sum(...myA));//spread
+
+    output:-
+        9
+
+    //If we have more values in array than the arguments of the function it will only take the first numbers of elements(the number of arguments passed in function declaration)
+
+    function sum(a,b)
+    {
+      return a + b;
+    }
+    var myA = [5,4,3];
+    console.log(sum(...myA));//spread
+
+    output:-
+        9
+
+
+  Rest
+
+    //If we dont know how many arguments will be passed in function we can use Rest operator in function declaration (...arguments), rest operator converts the arguments into array form to perform operation.
+
+    function add(...args)//rest
+    {
+      let sum = 0;
+      for (const arg of args) {
+        sum += arg;
+      }
+
+      return sum;
+    }
+
+    console.log(add(1,2,3,4,5));
+    
+    output:-
+      15
+
+    //If we specifically want to perform some operation on some specific arguments
+
+    function add(a, b, ...args)
+    {
+      let multi = a * b;
+      let sum = 0;
+      for (const arg of args) {
+        sum += arg;
+      }
+
+      return [sum, multi];
+    }
+
+    console.log(add(1,2,3,4,5));
+
+    output:-
+        [ 12, 2 ]
+
+    //The a and b mentioned in the function declaration means the 1 and 2 (first two arguments) will be ignored by Rest Operator.
+    //We can also return the the variable in function declaration in the form of array(or objects) as done above. 
+
+-----------------------------------------------------------------------------------------------------------
+Classes and Objects -->
+
+  //No compulsion to use keywords like function, var, let, const in declaration in class
+  Classes
+  
+
+    //To create a class, create a new js file(classes.js)
+
+      class User {
+        constructor(name,email)
+        {
+          this.name = name;
+          this.email = email;
+        }
+        courseList = [];
+        getInfo(){
+          return { name: this.name, email: this.email }
+        }
+        enrollCourse(name){
+          this.courseList.push(name);
+        }
+        getCourseList(){
+          return this.courseList;
+        }
+  
+       }
+
+  //to let other programs import the classes file add this statement at the bottom of classes file
+
+    module.exports = User;
+
+  Importing
+
+    //to import the class use this statement at top of program(index.js)
+
+      const User = require("./classes.js");
+
+    //create new instances of the classes(index.js)
+
+      const hitesh = new User("hitesh","sid@gmail.com");
+
+      console.log(hitesh.getInfo());
+
+      hitesh.enrollCourse("react");
+      hitesh.enrollCourse("angular");
+
+      let courses = hitesh.getCourseList();
+
+      courses.forEach((c) => {
+        console.log(c);
+      })
+
+    Output(index.js):-
+        { name: 'hitesh', email: 'sid@gmail.com' }
+        react
+        angular
+
+  
+  //To set a variable private use hashtag(#) before variable name and it should be used inside the whole class
+  {
+    eg.
+      #courseList = [];
+
+      enrollCourse(name){
+          this.#courseList.push(name);
+        }
+  }
+
+  //To inherit the class use extend and name of class to be inherited
+  {
+    eg.
+      class SubAdmin extends User{
+        getAdminInfo(){
+          return "i am subadmin"
+        };
+      }
+  }
+
+  //To keep any method private from child class we can use static keyword before declaration.
+
+  //Read about super keyword.
+
+-----------------------------------------------------------------------------------------------------------
+promises , async , await
+
+  const uno = () => {
+    return "i am first";
+  }
+
+
+  const dos = () => {
+    return new Promise((resolve,reject) => {
+      setTimeout(() => {
+        resolve("i am two");
+      },3000)
+    })
+  }
+
+  const tres = () => {
+    return "i am third";
+  }
+
+  const callMe = async () => {
+    let valOne = uno();
+    console.log(valOne);
+
+    let valTwo = await dos();
+    console.log(valTwo);
+
+    let valThree = tres();
+    console.log(valThree);
+  }
+
+  callMe();
+
+  output:-
+    i am first
+    /*Waits for 3 seconds*/
+    i am two
+    i am third
+
+-----------------------------------------------------------------------------------------------------------
+Handling Chuck Norris API
+
+  /*Running it on browser*/
+
+    fetch('https://api.chucknorris.io/jokes/random')
+
+    .then(response => {
+      return response.json();
+     })
+     
+    .then((data)=> {
+      // console.log("DATA is :",data);
+
+      var joke = data.value;
+      console.log("joke is :",joke);
+    })
+    .catch();
+

@@ -1,0 +1,1051 @@
+
+                                ------FUNDAMENTALS-------
+
+What is React :-
+  Open Source library for building user interface.
+  Not a framework .
+  Focused on UI.
+  Rich ecosystem .
+
+
+Why Learn React :-
+  Created and Mainted by Facebook.
+  More than 100K stars on GitHub.
+  Huge Community.
+  In demand Skillset.
+  Components Based Architecture.
+  Reusable Code
+
+
+React is Declarative.
+_________________________________________________________________________________________________________
+
+Create React App :-
+  npx create-react-app projectname
+
+
+Components :-
+  Components are independent and reusable bits of code. They serve the same purpose as JavaScript functions, but work in isolation and return HTML.
+  They are reusable and can nested inside other components.
+
+
+Types Of Components :-
+
+  1) Stateless functions Components :-
+
+      JavaScript Functions :-
+
+        const Welcome = (props) => {
+          return (
+            <h1>
+              hello,{props.name}
+            </h1>
+          )
+        }
+  
+  2) Statefull class components :-
+
+      Class extending Components class
+      Render Method returning HTML :-
+
+        class Welcome external React.Component {
+          return (
+            <h1>
+              hello,{this.props.name}
+            </h1>
+          )
+        }
+
+
+Functional Components :-
+
+  It is a JS function that accepts the input of properties and returns the HTML that describes the UI.
+
+    { Tip: By exporting Component default we can import it by any name :-
+
+
+          (Greet.js)
+          import React from 'react';
+
+          const Greet = () => {
+              return (
+                <h1>
+                  Hello Siddhant
+                </h1>
+              )
+          }
+
+        export default Greet; 
+        //if we export it at declaration we need to import it as its name in {}.
+
+
+          (App.js)
+          import './App.css';
+          import Greetings from './Components/Greet';
+
+          function App() {
+            return (
+              <div className="App">
+                <Greetings />
+              </div>
+            );
+          }
+
+          export default App;
+
+          Output:-
+                Hello Siddhant
+    }
+
+
+Class Components :-
+
+  (Greet.js)
+  import React, { Component } from 'react';
+
+  class Welcome extends Component{
+    render(){
+      return (
+        <h1>hi</h1>
+      )
+    
+    }
+  };
+
+  export default Welcome;
+
+
+  (App.js)
+  import './App.css';
+  import Welcome from './Components/Greet';
+
+  function App() {
+    return (
+      <div className="App">
+        <Welcome />
+      </div>
+    );
+  }
+
+  export default App;
+
+  Output:-
+      hi
+
+
+Functional Component Vs Class Components :-
+
+  Functional Component-
+    1) Simple Functions.
+    2) Use Function Components as much as possible.
+    3) Absence of 'this' keyword.
+    4) Mainly responsible for the UI.
+    5) Also called as Dumb / Presentational Components. 
+
+  Class Components-
+    1) More feature rich.
+    2) Maintain their own private data - state
+    3) Complex UI logic
+    4) Provide lifecycle hooks
+    5)  Also called as Stateful / Smart / Container Components.
+
+
+JSX differences
+
+  Class -> className
+  for -> htmlFor
+
+  camelCase property naming convention 
+    onclick -> onclick
+    tabindex -> tabIndex
+
+
+Props
+
+  Props In Function
+
+        (Greet.js)
+        import React from 'react';
+
+        const Greet = (props) => {
+          console.log(props);
+          return (
+            <div>
+              <h1>
+                Hello {props.name} the {props.heroname}
+              </h1>
+              {props.children} 
+              //Using props.children to add children HTMl.
+            </div>
+
+          )
+        }
+
+        export default Greet;
+
+
+        (App.js)
+        import './App.css';
+        import Greet from './Components/Greet';
+
+        function App() {
+          return (
+            <div className="App">
+              <Greet name="Bruce" heroname="Ironman">this is children prop</Greet >
+              <Greet name="Sid" heroname="Batman">
+                <button>Action</button>
+              </Greet >
+              <Greet name="Bro" heroname="Loki">
+                <input type="text" placeholder="enter something"></input>
+              </Greet >
+            </div>
+          );
+        }
+
+        export default App;
+
+
+  Props In Class 
+
+        (Greet.js)
+        import React, { Component } from 'react';
+
+        class Greet extends Component {
+          render() {
+            return (
+              <div>
+                <h1>
+                  Hello {this.props.name} the {this.props.heroname}
+                </h1>
+                
+              </div>
+            )
+          }
+        } 
+
+        export default Greet;
+
+
+        (App.js)
+        import './App.css';
+        import Greet from './Components/Greet';
+
+        function App() {
+          return (
+            <div className="App">
+              <Greet name="Bruce" heroname="Ironman"></Greet >
+              <Greet name="Sid" heroname="Batman"></Greet >
+              <Greet name="Bro" heroname="Loki"></Greet >
+            </div>
+          );
+        }
+
+        export default App;
+
+
+Props Vs State
+
+  Props in Components
+
+    1) Props get passed to the Component.
+    2) Function parameter.
+    3) Props are immutable.
+    4) props -> Functional Components. 
+       this.props -> Class Components. 
+    
+
+  State in Components
+   
+   1) State is managed within the components.
+   2) Variable declared in the function body.
+   3) State can be changed.
+   4) useState Hook -> Functional Component
+      this.state -> Class Component
+
+
+setState
+
+  1) Always make use of setState and modify the state directly.
+  2) Code has to be after the state has been updated. Place that code in the call back function which is the second argument to the setState method.
+  3) When you have to update state based on the previous state value, pass in a function as an argument instead of the regular object.
+
+
+Events in React
+  
+  Written in camelCase 
+  Event Handler is a function and not a function call , do not add a paranthesis.
+
+  function FunctionClick() {
+    const clickHandler = () => {
+      console.log("Button clicked");
+    }
+    return (
+      <div>
+        <button onClick={clickHandler}>Click</button>
+      </div>
+    )
+  }
+
+
+To Pass Methods as Props in React Components
+
+  In parent Component Define the method.
+  On the Child Component Tag pass a method as a prop.
+  In child component pass the method as props object(if you want to pass parameter use arrow function)
+
+  
+  (Child.js)
+  import React from 'react'
+
+  function Child({greetHandler}) {
+    return (
+      <div>
+        <button onClick={() => greetHandler("child")}>Greet Parent</button>
+      </div>
+    )
+  }
+
+  export default Child;
+
+
+
+  (ParentComponent.js)
+  import React, { Component } from 'react'
+
+  import Child from './Child';
+
+  class ParentComponent extends Component {
+
+    constructor(props) {
+      super(props)
+    
+      this.state = {
+        parentName : "parent"
+      }
+
+      this.greetParent = this.greetParent.bind(this);
+    }
+
+    greetParent(childName) {
+      alert(`Hello ${this.state.parentName} from ${childName}`)
+    }
+    
+    render() {
+      return (
+        <div>
+          <Child greetHandler={this.greetParent}/>
+        </div>
+      )
+    }
+  }
+
+  export default ParentComponent;
+
+
+  (App.js)
+  import { useState } from 'react';
+  import './App.css';
+  import ParentComponent from './Components/ParentComponent';
+
+  function App() {
+    return (
+      <div>
+      <ParentComponent />
+      </div>
+    );
+  }
+  export default App;
+
+
+Conditional Rendering
+
+  1) if/else
+  2) element variable
+  3) ternary conditional operator
+  4) short circuit operator
+
+  (UserGreeting.js)
+  import React, { Component } from 'react'
+
+  class UserGreeting extends Component {
+    constructor({isLogedIn}) {
+      super(isLogedIn)
+    
+      this.state = {
+        isLogedIn: false
+      }
+    }
+    
+    render() {
+      let message;
+      if(this.state.isLogedIn){
+        message = <div>welcome sid</div>
+      } else {
+        message = <div>welcome guest</div>
+      }
+
+      // if(this.state.isLogedIn)
+      // {
+      //   return(
+      //     <div><h1>welcom sid</h1></div>
+      //   )
+      // }
+      // else{
+      //   return(
+      //     <div><h1>welcome guest</h1></div>
+      //   )
+      // }
+      return (
+        <div>
+          {/* <div><h1>welcom sid</h1></div>
+          <div><h1>welcome guest</h1></div> */}
+          <h1>{message}</h1>
+        </div>
+      )
+    }
+  }
+
+  export default UserGreeting
+
+
+  (App.js)
+  import { useState } from 'react';
+  import './App.css';
+  import UserGreeting from './Components/UserGreeting';
+
+  function App() {
+    return (
+      <div>
+      <UserGreeting />
+      </div>
+    );
+  }
+
+  export default App;
+
+
+List Rendering
+
+  rendering the jsx as form of list.
+
+  (Person.js)
+  import React from 'react'
+
+  function Person({person}) {
+    return (
+      <div>
+        <h2>i am {person.name} my id is {person.id} and age is {person.age} my skill is {person.skill}</h2>
+      </div>
+    )
+  }
+
+  export default Person
+
+  (ListRendering.js)
+  import React from 'react'
+  import Person from './Person'
+
+  function ListRendering() {
+    const names = ["Bruce", "Clark", "Diana"]
+    const persons =
+      [
+        {
+          id: 1,
+          name: "bruce",
+          age: 30,
+          skill: "react"
+        },
+        {
+          id: 2,
+          name: "Clark",
+          age: 320,
+          skill: "Angular"
+        },
+        {
+          id: 3,
+          name: "Diana",
+          age: 45,
+          skill: "Vue"
+        }
+      ]
+    const personList = persons.map(person => <Person key={person.id} person={person} />)
+
+    return <div>{personList}</div>
+  }
+
+  export default ListRendering;
+
+
+  (App.js)
+  import { useState } from 'react';
+  import './App.css';
+  import ListRendering from './Components/ListRendering';
+
+  function App() {
+    return (
+      <div>
+      <ListRendering />
+      </div>
+    );
+  }
+
+  export default App;
+
+
+List and keys
+  
+  1) A "key" is a special string attribute you need to include when creating lists pf element.
+  2) Keys give the element a stable identity.
+  3) Keys help React identify which items have changed or added or removed.
+  4) Help in efficient update of the user interface.
+
+
+Index as key
+
+  When to Use index as a key?
+
+    1) The items in your list do not have a unique id.
+    2) The list is a static list and will not change.
+    3) The list will never be recorded or filtered.
+
+
+Lifecycle Methods
+
+  1) Mounting : constructor, static getDerivedStateFromProps, render and componentDidMount
+  2) Updating: static getDerivedStateFromProps, shouldComponentUpdate, render, getSnapshotBeforeUpdate and componentDidUpdate.
+  3) Unmounting: componentWillUnmount
+  4) Error Handling : static getDerivedStateFromError and componentDidCatch.
+
+
+Mounting Lifecycle Methods
+   
+  Constructor :- 
+  1) A special function that will get called whenever a new component is created.
+  2) Initializing state. Binding the event handlers.
+  3) Never make a http request from a constructer.
+  4) super(props). Directly overwrite this.state.
+
+  static getDerivedStateFromProps :-
+  1) When the state of the component depends on the changes in props over time.
+  2) set the state.
+  3) Never make a http request from a constructer.
+  
+  render :-
+  1) Only required method.
+  2) Reads props & state and return JSX.
+  3) Do not change state or interact with DOM or make ajax calls.
+  3) children components lifecycle methods are also executed.
+
+  componentDidMount :-
+  1) Invoked immediately after a component and all its children component have been rendered to the DOM.
+  2) Cause side effects. Ex: interact with the DOM or performed any ajax calls to load data.
+  
+
+Updating Lifecycle Methods
+
+  static getDerivedStateFromProps(props, state) :-
+  1) Method is called  time a component is re-rendered.
+  2) set the state.
+  3) Never make a http request from a constructer.
+
+  shouldComponentUpdate(nextProps, nextState) :-
+  1) Dictates if the component should re-render or not.
+  2) Performence optimization.
+  3) Never make a http request calling setState method.
+
+  render :-
+  1) Only required method.
+  2) Reads props & state and return JSX.
+  3) Do not change state or interact with DOM or make ajax calls.
+  3) children components lifecycle methods are also executed.
+
+  getSnapshotBeforeUpdate(prevProps, prevState) :-
+  1) Called right before the changes from the virtual DOM are to be reflected in the DOM.
+  2) Capture some information from the DOM.
+  3) Method will either return a null or return a value. Returned value will be passed as third parameter to the next method.
+
+  componentDidUpdate(prevProps, prevState, snapshot) :-
+  1) Called after the rende is finished in the re-render cycles.
+
+
+Unmounting Phase Method
+
+  componentWillUnmount()
+  1) Method is invoked immediately before a component is unmounted and destroyed.
+  2) Cancelling any network request, removing event handlers, cancelling any subscription and also invalidating timers.
+  3) Do not call the setState Method.
+
+
+Error Handling Phase Method.
+
+  static getDerivedStateFromError(error) 
+  
+  componentDidCatch(error, info)
+
+  --This both methods are used when there is an error either during rendering, in a lifecycle method, or in the constructor of any child component.
+
+
+Error Boundary
+
+  A class component that implement either one or both of the lifecycle methods getDerivedStateFromError or componentDidCatch becomes an error boundary.
+
+  The static Method getDerivedStateFromError method is used to render a fallback UI after an error is thrown and the componentDidCatch method is used to log the error information.
+
+  Error boundaries are React Component that catch JavaScript error in their child component tree, log those errors and display a fall-back UI.
+
+  A class component becomes an error boundary by defining either or both of getDerivedStateFromError and componentDidCatch lifecycle methods.
+
+  The placement of the error boundary also matters as it controls if the entire app should have the fall-back UI or just the component causing the problem.
+
+  Provide a way to gracefull handle error in application code.
+
+
+  (ErrorBoundary.js)
+  import React, { Component } from 'react'
+
+  class ErrorBoundary extends Component {
+    constructor(props) {
+      super(props)
+      this.state = {
+        hasError: false
+      }
+    }
+    
+    static getDerivedStateFromError(error){
+      return {
+        hasError: true
+      }
+    }
+
+    render() {
+      if (this .state.hasError){
+        return <h1>Something Went Wrong</h1>
+      }
+      return this.props.children
+    }
+  }
+  export default ErrorBoundary;
+
+
+  (Hero.js)
+  import React from 'react'
+
+  function Hero({heroName}) {
+    if(heroName === "Joker") {
+      throw new Error("joker is not a hero")
+    } 
+    return (
+      <div>
+      <h1>{heroName}</h1> 
+      </div>
+    )
+  }
+  export default Hero
+
+  (App.js)
+  import './App.css';
+  import ErrorBoundary from './Components/ErrorBoundary';
+  import Hero from './Components/Hero';
+
+  function App() {
+    
+    return (
+      <div>
+        <ErrorBoundary >
+      <Hero heroName="superman" />
+      </ErrorBoundary>
+
+      <ErrorBoundary >
+      <Hero heroName="Batman" />
+      </ErrorBoundary>
+
+      <ErrorBoundary >
+      <Hero heroName="Joker" />
+      </ErrorBoundary>
+
+      </div>
+    );
+  }
+
+  export default App;
+
+
+Fragments
+
+  Syntax:-
+        
+        <React.Fragment>
+
+        </React.Fragment>
+  
+  It let you group children of elements without adding extra nodes to the DOM. 
+
+
+Portals
+
+  (index.html)
+  
+    <div id="root"></div>
+    <div id="portal-root"></div>
+    
+  (PortalDemo.js)
+  import React from 'react'
+  import  ReactDOM  from 'react-dom'
+
+  function PortalDemo() {
+    return ReactDOM.createPortal (
+
+      <h1>Portals Demo</h1>,
+      document.getElementById('portal-root')
+
+    )
+  }
+
+  export default PortalDemo
+
+  (App.js)
+  import { useState } from 'react';
+  import './App.css';
+  import PortalDemo from './Components/PortalDemo';
+
+  function App() {
+    return (
+      <div>
+      <PortalDemo />
+      </div>
+    );
+  }
+  export default App;
+
+
+Higher Order Component
+  
+  A pattern where a function takes a component as an argument and returns a new component.
+ 
+  const NewComponent = higherOrderComponent(originalComponent) 
+  const EnhancedComponent = higherOrderComponent(originalComponent) 
+
+  eg:
+    const ironMan = withSuit( TonyStark )
+
+  
+  (withCounter.js)
+  import React, { Component } from 'react'
+
+  const withCounter = (WrappedComponent) => {
+    class WithCounter extends Component {
+      constructor(props) {
+        super(props)
+
+        this.state = {
+          count: 0
+        }
+      }
+
+      increamentCount = () => {
+        this.setState(prevState => {
+          return { count: prevState.count + 1 }
+        })
+      }
+      render() {
+        return <WrappedComponent 
+        count={this.state.count} 
+        increamentCount={this.increamentCount}
+        {...this.props}
+        />
+      }
+    }
+    return WithCounter;
+  }
+  export default withCounter;
+
+
+
+  (ClickCounter.js)
+  import React, { Component } from 'react'
+  import withCounter from './withCounter';
+
+  class ClickCounter extends Component {
+    render() {
+      const { count, increamentCount } = this.props
+      return (
+        <div>
+          <button onClick={increamentCount}>{this.props.name}Clicked {count} Times</button>
+        </div>
+      )
+    }
+  }
+  export default withCounter(ClickCounter);
+
+
+
+  (HoverCounter.js)
+  import React, { Component } from 'react'
+  import withCounter from './withCounter';
+
+  class HoverCounter extends Component {
+    render() {
+      const {count, increamentCount } = this.props
+      return (
+        <div>
+          <h2 onMouseOver={increamentCount}>Hovered {count} times</h2>
+        </div>
+      )
+    }
+  }
+  export default withCounter(HoverCounter);
+
+
+  (App.js)
+  import './App.css';
+  import ClickCounter from './Components/ClickCounter';
+  import HoverCounter from './Components/HoverCounter';
+
+  function App() {
+    return (
+      <div>
+        <ClickCounter name="Siddhant "/>
+        <HoverCounter />
+      </div>
+    );
+  }
+  export default App;
+
+
+Context
+
+  What problem context API solves?
+  Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+
+  Steps to create context:
+
+    I. Create the context.
+    II. Provide a context value.
+    III. Consume the context value.
+
+    1. Create context using react, make sure to export the provider and consumer components.
+        eg:(UserContext.js)
+
+          import React from "react" 
+          //(or  import {createContext} from "react"; //if we use this header we dont have to do React.createContext() only do createContext()
+
+          const UserContext = React.createContext() //user can add default value to createContext method.
+
+          const UserProvider = UserContext.Provider
+          const UserConsumer = UserContext.Consumer
+          
+          export { UserProvider, UserConsumer}
+
+    2. At top level(App.js) include the provider component and provide the value using value attribute, this value can be consumed in the any of decendent components.
+        eg:(App.js)
+
+          import React, { Component } from "react"
+          import ComponentC from './components/ComponentC'
+          import { UserProvider } from "./components/UserContext"
+
+          const App = () => {
+          return (
+              <div>
+               <UserProvider value ="vishwas">
+                <ComponentC />
+              </UserProvider>
+              </div>
+            );
+          };
+
+          export default App;
+
+    3. In the component where the value is required use consumer component and pass in a function as its child, the function receives the context value as its parameters which can be used to return desired jsx.
+        eg:(componentF)
+
+          import React, { Component } from "react"
+          import { UserProvider } from "./UserContext"
+
+          const ComponentF = () =>{
+            return(
+              <UserConsumer>
+              {
+                username => {
+                  return <div> hello {username}</div>
+                }
+              }
+              <UserConsumer>
+            )
+          }
+
+          export default ComponentF;
+
+        
+        (componentC.js)
+
+            import React, { Component } from "react"
+            import componentE from "./componentE"
+
+            const ComponentC = () =>{
+                  return(
+                    <ComponentE />
+              )
+            }
+
+            export default ComponentC;
+
+
+        (ComponentE.js)
+
+            import React, { Component } from "react"
+            import ComponentF from "./componentF"
+
+            const ComponentE = () =>{
+                  return(
+                    <ComponentF />
+              )
+            }
+
+            export default ComponentE;
+
+
+HTTP(using axios)
+  
+  Get request
+
+    (PostList.js)
+    import React, { Component } from 'react'
+    import axios from "axios"
+
+    class PostlList extends Component {
+      constructor(props) {
+        super(props)
+      
+        this.state = {
+          posts: [],
+          error : ""
+        }
+      }
+      componentDidMount(){
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+        .then(responce => {
+          console.log(responce)
+          this.setState({posts: responce.data})
+        })
+        .catch(error => {
+          console.log(error)
+          this.setState({errorMSG: "Error getting data"})
+        })
+      }
+      
+      render() {
+        const {posts, errorMSG} = this.state
+        return (
+          <div>
+            List of posts
+            {
+              posts.length ? 
+              posts.map(post => <div key={post.id}>{post.title}</div>) : 
+              null
+            }
+            {
+              errorMSG ? <div>{errorMSG}</div> : null
+            }
+          </div>
+        )
+      }
+    }
+    export default PostlList
+
+
+    (App.js)
+    import './App.css';
+    import PostlList from './Components/PostlList';
+
+    function App() {
+      return (
+        <div>
+          <PostlList />
+        </div>
+      );
+    }
+    export default App;
+
+
+
+  Post request
+
+    (PostForm.js)
+    import React, { Component } from 'react'
+    import axios from "axios";
+
+    class PostForm extends Component {
+      constructor(props) {
+        super(props)
+      
+        this.state = {
+          userId: '',
+          title: '',
+          body: ''
+        }
+      }
+
+      changeHandler = (e) => {
+        this.setState({[e.target.name] : e.target.value })
+      }
+      submitHandler = (e) => {
+        e.preventDefault()
+        console.log(this.state)
+        axios.post('https://jsonplaceholder.typicode.com/posts', this.state)
+        .then(responce => {
+          console.log(responce)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        
+
+      }
+      
+      render() {
+        const {userId, title, body} = this.state
+        return (
+          <div>
+            <form onSubmit={this.submitHandler}>
+              <div>
+                <input type="email" name="UserId" value={userId} onChange={this.changeHandler}/>
+              </div>
+
+              <div>
+                <input type="text" name="title" value={title} onChange={this.changeHandler}/>
+              </div>
+
+              <div>
+                <input type="text" name="body" value={body} onChange={this.changeHandler}/>
+              </div>
+
+              <button type="submit" >Submit</button>
+
+            </form>
+          </div>
+        )
+      }
+    }
+
+    export default PostForm
+
+
+    (App.js)
+    import './App.css';
+    import PostForm from './Components/PostForm';
+
+    function App() {
+      return (
+        <div>
+          <PostForm />
+        </div>
+      );
+    }
+    export default App;
+
+
+
+
+
+
+

@@ -1,0 +1,857 @@
+What are Hooks?
+  Hooks are new feature addition in React version 16.8 which allows you tu use React features without having to write a class.
+
+  Hooks don't work inside class
+
+
+Why Hooks?
+
+  Reason set 1
+    Understand how this keyword works in JavaScript.
+    Remember to bind event handler in class components. 
+    Classes don't minify very well and make hot reloading very unreliable.
+
+  Reason set 2
+    No perticular way to reuse stateful component logic.
+    HOC and render props patterns do address this problem.
+    Makes the code harder to follow.
+    There is need to share stateful logic in a better way.
+
+  Reason set 3
+    Create components for complex scenario such as data fetching and subscribing to event .
+    Related code is not organized is one place.
+    Eg. Data fetching - In componentDidMount and componentDidUpdate.
+    Eg. Event listners - In componentDidMount and componentWillUpdate.
+    Because of statefull logic - Cannot breake components into smaller ones.
+
+
+useState
+
+  1)The useState hook lets you add state to functional components.
+  2)In classes, the state is always an object. 
+  3)With the useState hook, the state doesn't have to be an object.
+  4)The useState hook returns an array with 2 elements.
+  5)The first element is the current value of the state, and the second element is a state setter function,
+  6)New state value depends on the previous state value. You can pass a function to setter function.
+  7)When dealing with objects or array, always make sure to spread your state variable and then call the setter function.
+
+  Rules :
+   1) Only call Hooks at the Top Level.
+   2) Dont call hooks inside loops, condition, or nested function.
+   3) Only call hooks from react functions
+   4) Call them from within functional components and not just any regular javascript function.
+
+
+      (HookCounter.js)
+      import React,{useState} from 'react'
+
+      function HookCounter() {
+        const [count, setCount] = useState(0);
+
+        const incrementCount = () => {
+          setCount(count + 1 )
+        }
+        return (
+          <div>
+            <button onClick={incrementCount}>Count {count}</button>
+          </div>
+        )
+      }
+      export default HookCounter;
+
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import HookCounter from './Components/HookCounter';
+
+      function App() {
+        return (
+          <div className="App">
+              {/* <ClassCounter /> */}
+              <HookCounter />
+          </div>
+        );
+      }
+      export default App;
+
+
+
+  Updating state Using arrow function :
+
+      (HookCunter.js)
+      import React, {useState}from 'react'
+
+      function HookCounter2() {
+        const initialCount = 0;
+        const [count, setCount] = useState(initialCount)
+        
+        const incrementCount = () => {
+          setCount(prevcount => precount + 1)
+        }
+
+        const decrementCount = () => {
+          setCount(prevcount => precount - 1)
+        }
+
+        const resetCount = () => {
+          setCount(prevcount => precount = 0)
+        }
+        return (
+          <div>
+            <div>{count}</div>
+            <button onClick={decrementCount}>Decrement</button>
+            <button onClick={resetCount}>Reset</button>
+            <button onClick={incrementCount}>Increment</button>
+          </div>
+        )
+      }
+      export default HookCounter2
+
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import HookCounter2 from './Components/HookCounter2';
+
+      function App() {
+        return (
+          <div className="App">
+            <HookCounter2 />
+          </div>
+        );
+      }
+
+      export default App;
+
+
+  useState with objects :
+
+    The setter function provided by the useState hook does not automatically merge and update objects you have to manualy merge it yourself and then pass the value to the setter function(using spread operator(...))
+
+      (HookCounter3.js)
+      import React, {useState} from 'react'
+
+      function HookCounter3() {
+        const object = {
+          firstName: '',
+          lastName : ''
+        }
+        const [name, setName] = useState(object)
+        return (
+          <div>
+            <form>
+
+              <input type="text" 
+              value={name.firstName} 
+              onChange={e => setName({...name,firstName: e.target.value})}
+              />
+
+              <input type="text" 
+              value={name.lastName} 
+              onChange={e => setName({...name, lastName: e.target.value})}
+              />
+
+              <h2>Your first name is: {name.firstName}</h2>
+              <h2>Your last name is: {name.lastName}</h2>
+            </form>
+          </div>
+        )
+      }
+      export default HookCounter3
+
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import HookCounter3 from './Components/HookCounter3';
+
+      function App() {
+        return (
+          <div className="App">
+            <HookCounter3 />
+          </div>
+        );
+      }
+      export default App;
+
+  useState with arrays
+
+      (HookCounter4.js)
+      import React, { useState } from 'react'
+
+      function HookCounter4() {
+        const array = []
+        const [items, setItems] = useState(array)
+
+        const addItem = () => {
+          setItems([...items,{
+            id: items.length,
+            value: Math.floor(Math.random() * 10) + 1
+          }])
+        }
+
+        return (
+          <div>
+            <button onClick={addItem}>Add a number</button>
+            <ul>
+              {items.map(item => (
+              <li key={item.id}>{item.value}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+      export default HookCounter4
+
+      
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import HookCounter4 from './Components/HookCounter4';
+
+      function App() {
+        return (
+          <div className="App">
+            <HookCounter4 />
+          </div>
+        );
+      }
+      export default App;
+
+
+useEffect
+
+  1) The Effect hook lets you perform side effects in function components.
+  2) Its a close replacement for componentDidMount, componentDidUpdate and componentWillUnmount.
+  3) useEffect runs after every render and every update.
+  4) useEffect is placed inside the component, by doing this we can easily access the component's state and props without having to write any additional code. 
+
+
+      (EffectCounter1.js)
+      import React, {useState, useEffect} from 'react'
+
+      function EffectCounter1() {
+        const [count , setCount] = useState(0)
+
+        useEffect(() => {
+          document.title = `you clicked ${count} times`
+        },)
+        return (
+          <div>
+            <button onClick={() => setCount(count + 1)}>Click {count}</button>
+          </div>
+        )
+      }
+      export default EffectCounter1
+
+
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import EffectCounter1 from './Components/EffectCounter1';
+
+      function App() {
+        return (
+          <div className="App">
+            <EffectCounter1 />
+          </div>
+        );
+      }
+      export default App;
+
+
+
+  In order to conditionaly render the effect hook specify the second parameter to useEffect, the second parameter is array value that the effect depends on, if the value don't change between renders the effect simply doesn't runs.
+  We can mimic componentDidMount with useEffect hook by simply passing in a empty array as the second parameter to use effect. 
+
+
+      (EffectCounter2.js)
+      import React,{useState, useEffect} from 'react'
+
+      function EffectCounter2() {
+        const [count, setCount] = useState(0)
+        const [name, setName] = useState('')
+
+        useEffect(
+          () => {
+            console.log("useEffect - Updating Document Tite")
+            document.title = `You Clicked ${count} Times`
+          },
+          [count]
+        )
+        return (
+          <div>
+            <input type="text" value={name} onChange={e => setName(e.target.value)}/>
+            <button onClick={() => setCount(count + 1)}>Click {count} Times</button>
+          </div>
+        )
+      }
+      export default EffectCounter2;
+
+
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import EffectCounter2 from './Components/EffectCounter2';
+
+      function App() {
+        return (
+          <div className="App">
+            <EffectCounter2 />
+          </div>
+        );
+      }
+      export default App;
+
+  
+  Fetching Data using useEffect 1
+      
+      (DataFetching.js)
+      import React,{useState,useEffect} from 'react'
+      import axios from "axios"
+
+      function DataFetching() {
+        const [posts, setPosts] = useState([])
+
+        useEffect(() => {
+          axios.get("https://jsonplaceholder.typicode.com/posts")
+          .then(res => {
+            console.log(res)
+            setPosts(res.data)
+          })
+          .catch(err => console.log(err))
+        
+        },[])
+
+        return (
+          <div>
+            <ul>
+              {posts.map(posts => <li key={posts.id}>{posts.title}</li>)}
+            </ul>
+          </div>
+        )
+      }
+      export default DataFetching
+
+
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import DataFetching from './Components/DataFetching';
+
+      function App() {
+        return (
+          <div className="App">
+            <DataFetching />
+          </div>
+        );
+      }
+      export default App;
+
+
+  Fetching data using useEffect 2
+
+
+      (DataFetching.js)
+      import React,{useState,useEffect} from 'react'
+      import axios from "axios"
+
+      function DataFetching() {
+        const [post, setPost] = useState({})
+        const [id, setId] = useState(1)
+        const [idFromButtonClick, setIdFromButtonClick] = useState(1)
+
+        const handleClick = () => {
+          setIdFromButtonClick(id)
+        }
+
+        useEffect(() => {
+          axios.get(`https://jsonplaceholder.typicode.com/posts/${idFromButtonClick}`)
+          .then(res => {
+            console.log(res)
+            setPost(res.data)
+          })
+          .catch(err => console.log(err))
+        
+        },[idFromButtonClick])
+
+        return (
+          <div>
+            <input type="text" value={id} onChange={e => setId(e.target.value)}/>
+            <button type='button' onClick={handleClick}>Fetch Post</button>
+            <div>
+              {post.title}
+            </div>
+            {/* <ul>
+              {post.map(post => <li key={post.id}>{post.title}</li>)}
+            </ul> */}
+          </div>
+        )
+      }
+      export default DataFetching;
+
+
+      (App.js)
+      import React from 'react'
+      import './App.css';
+      import DataFetching from './Components/DataFetching';
+
+      function App() {
+        return (
+          <div className="App">
+            <DataFetching />
+          </div>
+        );
+      }
+      export default App;
+
+
+useContext
+
+  Context provides a way to pass data to through the component tree without having to pass props down manually at every level.
+
+      (UserContextE.js)
+      import React , {useContext}from 'react'
+      import UseContextF from './UseContextF'
+      import {UserContext, channelContext} from "../App"
+
+      function UseContextE() {
+        
+      const user =  useContext(UserContext)
+      const channel = useContext(channelContext)
+
+        return (
+          <div>
+            {user} - {channel}
+          </div>
+        )
+      }
+      export default UseContextE;
+
+
+      (UserContextC.js)
+      import React from 'react'
+      import UseContextE from './UseContextE'
+
+      function UseContextC() {
+        return (
+          <div>
+            <UseContextE />
+          </div>
+        )
+      }
+      export default UseContextC;
+
+
+      (App.js)
+      import React, { createContext } from 'react'
+      import './App.css';
+      import UseContextC from './Components/UseContextC';
+
+      export const UserContext = createContext()
+      export const channelContext = createContext()
+
+      function App() {
+        return (
+          <div className="App">
+            <UserContext.Provider value={"Siddhant"}>
+              <channelContext.Provider value={'Code Revoluion'}>
+                <UseContextC />
+              </channelContext.Provider>
+            </UserContext.Provider>
+          </div>
+        );
+      }
+      export default App;
+
+
+useReducer
+
+  1) useReducer is a hook is used for state management
+  2) It is an alternative to useState
+  3) What's the difference? :
+      useState is built using useReducer
+  4) When to useReducer vs useState?
+      /*
+
+        add after words
+      
+      */
+	
+
+
+  reduce in Javasript                             Vs                                   useReducer in React 
+  array.reduce(reducer, initialValue)                                      useReducer(reducer,initialState)
+  singleValue = reducer(accumulator,itemValue)                     newState = reducer(currentState, action)
+  reduce method returns a single value               useReducer returns a pair of values[newstate,dispatch]
+
+
+
+    (useReducerCounter2.js)
+    import React, { useReducer } from 'react'
+
+    const initialState = {
+      firstCounter: 0,
+      secondCounter: 10
+    }
+
+    const reducer = (state, action) => {
+      switch (action.type) {
+        case 'increment':
+          return { ...state, firstCounter: state.firstCounter + action.value }
+
+        case 'decrement':
+          return { ...state, firstCounter: state.firstCounter - action.value }
+
+        case 'increment2':
+          return { ...state, secondCounter: state.secondCounter + action.value }
+
+        case 'decrement2':
+          return { ...state, secondCounter: state.secondCounter - action.value }
+
+        case 'reset':
+          return initialState
+
+        default:
+          return state
+      }
+    }
+
+    function UseReducerCounter2() {
+
+      const [count, dispatch] = useReducer(reducer, initialState)
+
+      return (
+        <div>
+          <div>First Counter - {count.firstCounter}</div>
+          <div>Second Counter - {count.secondCounter}</div>
+          <button onClick={() => dispatch({ type: 'increment', value: 1 })}>
+            Increment
+          </button>
+          <button onClick={() => dispatch({ type: 'decrement', value: 1 })}>
+            Decrement
+          </button>
+          <button onClick={() => dispatch({ type: 'increment', value: 5 })}>
+            Increment 5
+          </button>
+          <button onClick={() => dispatch({ type: 'decrement', value: 5 })}>
+            Decrement 5
+          </button>
+
+          <div>
+            <button onClick={() => dispatch({ type: 'increment2', value: 1 })}>
+              Increment Counter 2
+            </button>
+            <button onClick={() => dispatch({ type: 'decrement2', value: 1 })}>
+              Decrement Counter 2
+            </button>
+
+            <div>
+              <button onClick={() => dispatch({ type: 'reset' })}>
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    export default UseReducerCounter2;
+
+
+    (App.js)
+    import React, { createContext, useReducer } from 'react'
+    import './App.css';
+    import UseReducerCounter3 from './Components/UseReducerCounter3';
+
+    function App() {
+      return (
+        <div className="App">
+          <UseReducerCounter3 />
+        </div>
+      );
+    }
+    export default App;
+
+  
+useCallback
+
+  what is useCallback ?
+  useCallback is a hook that will return a memmoized version of the Callback function that only change if one of the dependencies has changed.
+
+  why to use useCallback ?
+  It is usefull when passing callbacks to optimized to child components that rely on reference equality to prevent unnecessary renders.
+
+
+
+    (Title.js)
+    import React from 'react'
+
+    function Title() {
+      console.log("rendering Title")
+      return (
+        <div>
+          <h2>
+            useCallback Hook
+          </h2>
+          
+        </div>
+      )
+    }
+    export default React.memo(Title)
+
+
+    (Count.js)
+    import React from 'react'
+
+    function Count({text, count}) {
+      console.log(`rendering  ${text} `)
+      return (
+        <div>
+          {text} - {count}
+        </div>
+      )
+    }
+    export default React.memo(Count)
+
+
+    (Button.js)
+    import React from 'react'
+
+    function Button({handleClick, children}) {
+      console.log(`rendering button - ${children}`)
+      return (
+        <div>
+          <button onClick={handleClick}>
+            {children}
+          </button>
+        </div>
+      )
+    }
+    export default React.memo(Button)
+
+
+    (ParentComponent.js)
+    import React, { useState , useCallback} from 'react'
+    import Button from './Button'
+    import Count from './Count'
+    import Title from './Title'
+
+    function ParentComponent() {
+      const [age, setAge] = useState(25)
+      const [salary, setSalary] = useState(50000)
+
+      const incrementAge = useCallback(() => {
+        setAge(age + 1)
+      },[age])
+
+      const incrementSalary = useCallback(() => {
+        setSalary(salary + 1000)
+      },[salary]) 
+      
+      return (
+        <div>
+          <Title />
+          <Count text="Age" count={age} />
+          <Button handleClick={incrementAge} >Increment Age</Button>
+          <Count text="Salary" count={salary} />
+          <Button handleClick={incrementSalary}>Increment Salary</Button>
+        </div>
+      )
+    }
+    export default ParentComponent;
+
+
+    (App.js)
+    import React from 'react'
+    import './App.css';
+    import ParentComponent from './Components/ParentComponent';
+
+    function App() {
+      return (
+        <div className="App">
+          <ParentComponent/>
+        </div>
+      );
+    }
+    export default App;
+
+
+useMemo
+
+  It invokes the provided function and cashes its result
+
+    (MemoCounter.js)
+    import React, { useState, useMemo } from 'react'
+
+    function MemoCounter() {
+      const [counterOne, setCounterOne] = useState(0)
+      const [counterTwo, setCounterTwo] = useState(0)
+
+      const incrememnt1 = () => {
+        setCounterOne(counterOne + 1)
+      }
+
+      const incrememnt2 = () => {
+        setCounterTwo(counterTwo + 1)
+      }
+
+      const isEven = useMemo(() => {
+        let i = 0;
+        while(i < 200000000)
+          i++
+        return counterOne % 2 === 0
+      },[counterOne] )
+
+
+      return (
+        <div>
+
+          <div>
+            <button onClick={incrememnt1}>Count one - {counterOne}</button>
+            <span>{isEven ? "Even" : "Odd"}</span>
+          </div>
+
+          <div>
+            <button onClick={incrememnt2}>Count two - {counterTwo}</button>
+          </div>
+
+        </div>
+      )
+    }
+    export default MemoCounter
+
+
+useRef
+
+  It makes it possible to access DOM nodes directly within functional components
+
+    (UseRefFocusInput.js) //getting focus on input area after opening page
+    import React,{useEffect, useRef} from 'react'
+
+    function UseRefFocusInput() {
+
+      const inputRef = useRef(null)
+
+      useEffect(() => {
+        //Focus on input element
+        inputRef.current.focus()
+      }, [])
+      return (
+        <div>
+          <input ref={inputRef} type="text"></input>
+        </div>
+      )
+    }
+    export default UseRefFocusInput;
+
+
+    (App.js)
+    import React from 'react'
+    import './App.css';
+    import UseRefFocusInput from './Components/UseRefFocusInput';
+
+    function App() {
+
+      return (
+        <div className="App">
+          <UseRefFocusInput />
+        </div>
+      );
+    }
+    export default App;
+
+
+
+  Stop timer using useRef hook
+
+    (UseRefTimer.js)
+    import React,{useState, useEffect, useRef} from 'react'
+
+    function UseRefTimer() {
+      const [timer, setTimer] = useState(0)
+
+      const intervalRef = useRef()
+
+      useEffect(() => {
+        intervalRef.current = setInterval(() => {
+          setTimer(prevTimer => prevTimer + 1)
+        },1000)
+        return () => {
+          clearInterval(intervalRef.current)
+        }
+      }, [])
+      return (
+        <div>
+          useRef Hook Timer - {timer}
+          <button onClick={() => clearInterval(intervalRef.current)}>Stop Hook Timer</button>
+        </div>
+      )
+    }
+    export default UseRefTimer;
+
+
+    (App.js)
+    import React from 'react'
+    import './App.css';
+    import UseRefTimer from './Components/UseRefTimer';
+
+
+    function App() {
+      return (
+        <div className="App">
+          <UseRefTimer />
+        </div>
+      );
+    }
+    export default App;
+
+
+Custom Hooks
+
+  A custom hook is basically a javascript function whose name start with "use".
+  A custom hook can also call other Hook is required.
+
+  why create a custom hook ?
+  share logic - Alternative to HOCs and Render Props.
+
+    (useDocumentTitle.js)
+    import {useEffect}from 'react'
+
+    function useDocumentTitle(count) {
+      useEffect(() => {
+        document.title =`count - ${count}`
+      },[count])
+    }
+    export default useDocumentTitle;
+
+
+    (DocTitleOne.js)
+    import React,{useState} from 'react'
+    import useDocumentTitle from '../CustomHooks1/useDocumentTitle'
+
+    function DocTitleOne() {
+      const [count, setCount] = useState(0)
+      useDocumentTitle(count)
+      return (
+        <div>
+          <button onClick={() => setCount(count + 1)}>Count - {count}</button>
+        </div>
+      )
+    }
+    export default DocTitleOne;
+
+
+    (App.js)
+    import React from 'react'
+    import './App.css';
+    import DocTitleOne from './CustomHooks/DocTitleOne';
+
+    function App() {
+      return (
+        <div className="App">
+          <DocTitleOne />
+        </div>
+      );
+    }
+    export default App;
+
+
+ 

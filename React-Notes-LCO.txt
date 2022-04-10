@@ -1,0 +1,284 @@
+//To create React App 
+  npx create-react-app my-app
+  
+  //in respected directory 
+
+//To run app 
+  cd app_name
+  npm start
+
+/*to create a fresh app
+  delete all file in src folder
+  and create new index.js file,
+  create new style.css file,
+  create new app.js file.
+  */
+
+  //The base structure of code in index.js will be 
+
+    import ReactDom from 'react-dom';
+    import App from "./app"
+
+
+    ReactDom.render(<App/>,document.getElementById('root'))
+
+  //The base structure of code in app.js will be
+
+    import React from 'react';
+    import './style.css';
+
+
+    const App = () => {
+      return (
+        <div>
+          <h1 style={{ textAlign: 'center' }}>Hello World </h1>
+          <button className="button">button</button>
+        </div>
+
+      );
+    };
+
+    export default App;
+
+  //The base structure of code in style.css will be same
+
+----------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------
+//To give inline styling in react we should give in double paranthesis {{}} and use : instead = 
+  eg:
+  <h1 style={{ textAlign: 'center' }}>Hello World </h1>
+
+//To give class to any tag in react we have to use className instead of class
+  eg:
+    <button className="button">button</button>
+
+//HTML should be returned inside the return statement and javasript before the return statement.
+
+----------------------------------------------------------------------------------------------------------
+//Every tag should be under the parent tag(div,span etc...)
+
+  eg:
+    <div>
+      <h1 style={{ textAlign: 'center' }}>Hello World </h1>
+      <button className="button">button</button>
+    </div>
+----------------------------------------------------------------------------------------------------------
+//Two components in react
+    class components
+    function components
+
+----------------------------------------------------------------------------------------------------------
+//You can create a button and used it as you want in your app.js file to do this create a seperate Button.js and import it in app.js
+
+  eg(Buttton.js):
+    import React from "react";
+
+    const Button = ({title="nothing"}) => (
+      <div>
+        <button className="button">{title}</button>
+      </div>
+    )
+    export default Button;
+
+  eg(app.js):
+    import React from 'react';
+    import './style.css';
+    import Button from './Button';
+
+
+    const App = () => {
+      return (
+        <div>
+          <h1 style={{ textAlign: 'center' }}>Hello World </h1>
+          <Button title="App store"/>
+          <Button title="Play store"/>
+          <Button/>
+          
+
+
+          {/* <button className="button">App store</button>
+          <button className="button">Play store</button> */}
+        </div>
+
+      );
+    };
+    export default App;
+-----------------------------------------------------------------------------------------------------------
+Props 
+  //passing the properties to a components like below. title in function button in Buttton.js is a prop. 
+
+  eg(Buttton.js):
+    import React from "react";
+
+    const Button = ({title="nothing"}) => (
+      <div>
+        <button className="button">{title}</button>
+      </div>
+    )
+    export default Button;
+
+  eg(app.js):
+    import React from 'react';
+    import './style.css';
+    import Button from './Button';
+
+
+    const App = () => {
+      return (
+        <div>
+          <h1 style={{ textAlign: 'center' }}>Hello World </h1>
+          <Button title="App store"/>
+          <Button title="Play store"/>
+          <Button/>
+          
+
+
+          {/* <button className="button">App store</button>
+          <button className="button">Play store</button> */}
+        </div>
+
+      );
+    };
+    export default App;
+-----------------------------------------------------------------------------------------------------------
+States
+
+    //States is a central place where all variables are stored and there is a proper way to update that state(it is not updated directly OR never mutate the state directly)
+    //You need to import it like below in react import statement(import React, { useState } from "react";)
+    //syntax:
+            first decleare const,(const)
+            and square brackets to declare name of variable,(const [count])
+            then =,(const [count] =)
+            and keyword useState(),(const [count] = useState())
+            and write a method inside square brackets after the name of variable separted with quama, this method will be responsible for updating the variable,(const [count, setCount] = useState())
+            and the initial value of variable is written inside brackets of useState.
+            eg:
+              const [count, setCount] = useState(0)
+
+
+    import React, { useState } from "react";
+    import "./App.css";
+
+    function App() {
+
+      const [count, setCount] = useState(0)
+
+
+      return (
+        <div className="App">
+          <header>
+          <h1>Counter App Using States/Hooks</h1>
+          </header>
+
+          <h2>Current Value of count is {count} </h2>
+          <button onClick={() => setCount(0)}>Reset Counter</button>
+          <button onClick={() => setCount(count+1)}>Increase Counter</button>
+          <button onClick={() => setCount(count-1)}>Decrease Counter</button>
+
+        </div>
+      );
+    };
+
+    export default App;
+
+----------------------------------------------------------------------------------------------------------
+//What problem context API solves?
+  Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+
+  Steps to create context:
+
+    I. Create the context.
+    II. Provide a context value.
+    III. Consume the context value.
+
+    1. Create context using react, make sure to export the provider and consumer components.
+        eg:(UserContext.js)
+
+          import React from "react" 
+          //(or  import {createContext} from "react"; //if we use this header we dont have to do React.createContext() only do createContext()
+
+          const UserContext = React.createContext()
+
+          const UserProvider = UserContext.Provider
+          const UserConsumer = UserContext.Consumer
+          
+          export { UserProvider, UserConsumer}
+
+    2. At top level(App.js) include the provider component and provide the value using value attribute, this value can be consumed in the any of decendent components.
+        eg:(App.js)
+
+          import React, { Component } from "react"
+          import ComponentC from './components/ComponentC'
+          import { UserProvider } from "./components/UserContext"
+
+          const App = () => {
+          return (
+              <div>
+               <UserProvider value ="vishwas">
+                <ComponentC />
+              </UserProvider>
+              </div>
+            );
+          };
+
+          export default App;
+
+    3. In the component where the value is required use consumer component and pass in a function as its child, the function receives the context value as its parameters which can be used to return desired jsx.
+        eg:(componentF)
+
+          import React, { Component } from "react"
+          import { UserProvider } from "./UserContext"
+
+          const ComponentF = () =>{
+            return(
+              <UserConsumer>
+              {
+                username => {
+                  return <div> hello {username}</div>
+                }
+              }
+              <UserConsumer>
+            )
+          }
+
+          export default ComponentF;
+
+        
+        (componentC.js)
+
+            import React, { Component } from "react"
+            import componentE from "./componentE"
+
+            const ComponentC = () =>{
+                  return(
+                    <ComponentE />
+              )
+            }
+
+            export default ComponentC;
+
+
+        (ComponentE.js)
+
+            import React, { Component } from "react"
+            import ComponentF from "./componentF"
+
+            const ComponentE = () =>{
+                  return(
+                    <ComponentF />
+              )
+            }
+
+            export default ComponentE;
+
+
+       
+----------------------------------------------------------------------------------------------------------
+  Redux principles
+
+  1) Single source of truth(central state). 
+
+  2) State is read only.
+
+  3) Changes are made with pure functions.
